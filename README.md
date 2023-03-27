@@ -3,7 +3,8 @@ This is a Twitter bot that does fact checking and summarizes tweets using OpenAI
 
 ## Features
 
-- Summarizes tweets using GPT-3
+- Perfom Fact-Checking on tweets
+- Summarizes tweets based on fact check results
 - Extracts user location and tweet source
 - Uploads summarized text to Firebase Storage
 - Replies to tweets with the summary and a download link
