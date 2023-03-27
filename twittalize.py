@@ -96,4 +96,7 @@ if __name__ == "__main__":
     listener = FactCheckBot()
     stream = tweepy.Stream(auth=api.auth, listener=listener)
 
-    # Change "your_bot
+    # Change "your_bot_username" to your bot's username
+    stream.filter(track=["YOUR TWITTER_USERNAME_GOES_HERE"])
+
+    print
