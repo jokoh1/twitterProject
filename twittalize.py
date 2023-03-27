@@ -39,6 +39,9 @@ class SummaryBot(tweepy.StreamListener):
 
         tweet_source = status.source
 
+        # Fact-check the tweet
+        fact_check_result = self.fact_check(tweet_text)
+
         # Summarize the tweet
         summary = self.summarize(tweet_text)
 
@@ -56,10 +59,22 @@ class SummaryBot(tweepy.StreamListener):
         # Generate a public download link
         download_url = blob.generate_signed_url(timedelta(hours=24), method="GET")
 
-        # Reply to the tweet with the summary and download link
-        reply = f"@{user_screen_name} Summary: {summary[:100]}... Download full summary: {download_url}"
+        # Reply to the tweet with the fact-check result, summary, and download link
+        reply = f"@{user_screen_name} Fact Check: {fact_check_result} | Summary: {summary[:100]}... Download full summary: {download_url}"
         api.update_status(status=reply, in_reply_to_status_id=tweet_id)
-        print("Tweet summarized and replied:", reply)
+        print("Tweet fact-checked, summarized, and replied:", reply)
+
+    def fact_check(self, text):
+        response = openai.Completion.create(
+            engine="text-davinci-002",
+            prompt=f"Please fact check the following tweet: {text}",
+            max_tokens=50,
+            n=1,
+            stop=None,
+            temperature=0.7,
+        )
+        fact_check_result = response.choices[0].text.strip()
+        return fact_check_result
 
     def summarize(self, text):
         response = openai.Completion.create(
